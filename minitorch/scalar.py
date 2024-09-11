@@ -93,30 +93,36 @@ class Scalar:
 
     def __add__(self, b: ScalarLike) -> Scalar:
         # TODO: Implement for Task 1.2.
-        raise NotImplementedError('Need to implement for Task 1.2')
+        # raise NotImplementedError('Need to implement for Task 1.2')
+        return Add.apply(self,b)
 
     def __bool__(self) -> bool:
         return bool(self.data)
 
     def __lt__(self, b: ScalarLike) -> Scalar:
         # TODO: Implement for Task 1.2.
-        raise NotImplementedError('Need to implement for Task 1.2')
+        # raise NotImplementedError('Need to implement for Task 1.2')
+        return LT.apply(self,b)
 
     def __gt__(self, b: ScalarLike) -> Scalar:
         # TODO: Implement for Task 1.2.
-        raise NotImplementedError('Need to implement for Task 1.2')
+        # raise NotImplementedError('Need to implement for Task 1.2')
+        return LT.apply(b,self)
 
     def __eq__(self, b: ScalarLike) -> Scalar:  # type: ignore[override]
         # TODO: Implement for Task 1.2.
-        raise NotImplementedError('Need to implement for Task 1.2')
+        # raise NotImplementedError('Need to implement for Task 1.2')
+        return EQ.apply(self,b)
 
     def __sub__(self, b: ScalarLike) -> Scalar:
         # TODO: Implement for Task 1.2.
-        raise NotImplementedError('Need to implement for Task 1.2')
+        # raise NotImplementedError('Need to implement for Task 1.2')
+        return Add.apply(self,Neg.apply(b))
 
     def __neg__(self) -> Scalar:
         # TODO: Implement for Task 1.2.
-        raise NotImplementedError('Need to implement for Task 1.2')
+        # raise NotImplementedError('Need to implement for Task 1.2')
+        return Neg.apply(self)
 
     def __radd__(self, b: ScalarLike) -> Scalar:
         return self + b
@@ -126,19 +132,23 @@ class Scalar:
 
     def log(self) -> Scalar:
         # TODO: Implement for Task 1.2.
-        raise NotImplementedError('Need to implement for Task 1.2')
+        # raise NotImplementedError('Need to implement for Task 1.2')
+        return Log.apply(self)
 
     def exp(self) -> Scalar:
         # TODO: Implement for Task 1.2.
-        raise NotImplementedError('Need to implement for Task 1.2')
+        # raise NotImplementedError('Need to implement for Task 1.2')
+        return Exp.apply(self)
 
     def sigmoid(self) -> Scalar:
         # TODO: Implement for Task 1.2.
-        raise NotImplementedError('Need to implement for Task 1.2')
+        # raise NotImplementedError('Need to implement for Task 1.2')
+        return Sigmoid.apply(self)
 
     def relu(self) -> Scalar:
         # TODO: Implement for Task 1.2.
-        raise NotImplementedError('Need to implement for Task 1.2')
+        # raise NotImplementedError('Need to implement for Task 1.2')
+        return ReLU.apply(self)
 
     # Variable elements for backprop
 
@@ -174,7 +184,11 @@ class Scalar:
         assert h.ctx is not None
 
         # TODO: Implement for Task 1.3.
-        raise NotImplementedError('Need to implement for Task 1.3')
+        # raise NotImplementedError('Need to implement for Task 1.3')
+        values = self.history.last_fn._backward(self.history.ctx,d_output)
+        parents = self.parents
+        for v,d in zip(parents,values):
+            yield v,d
 
     def backward(self, d_output: Optional[float] = None) -> None:
         """
@@ -216,3 +230,7 @@ but was expecting derivative f'=%f from central difference."""
             err_msg=err_msg
             % (str([x.data for x in scalars]), x.derivative, i, check.data),
         )
+
+
+a = Scalar(1)
+print(a)

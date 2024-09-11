@@ -44,8 +44,11 @@ def index_to_position(index: Index, strides: Strides) -> int:
     """
 
     # TODO: Implement for Task 2.1.
-    raise NotImplementedError('Need to implement for Task 2.1')
-
+    # raise NotImplementedError('Need to implement for Task 2.1')
+    # print('zzzzzzzzz',index,strides,type(index),type(strides))
+    x = sum([i*s for i,s in zip(index,strides)])
+    # print('yyyyyyyyyy',x)
+    return int(x)
 
 def to_index(ordinal: int, shape: Shape, out_index: OutIndex) -> None:
     """
@@ -61,7 +64,10 @@ def to_index(ordinal: int, shape: Shape, out_index: OutIndex) -> None:
 
     """
     # TODO: Implement for Task 2.1.
-    raise NotImplementedError('Need to implement for Task 2.1')
+    # raise NotImplementedError('Need to implement for Task 2.1')
+    for  i in range(len(shape)-1,-1,-1):
+        out_index[i] = ordinal % shape[i]
+        ordinal = ordinal // shape[i]
 
 
 def broadcast_index(
@@ -84,7 +90,14 @@ def broadcast_index(
         None
     """
     # TODO: Implement for Task 2.2.
-    raise NotImplementedError('Need to implement for Task 2.2')
+    # raise NotImplementedError('Need to implement for Task 2.2')
+    extra_dim = len(big_shape) - len(shape)
+    for i in range(len(shape)):
+        bd = i + extra_dim
+        if shape[i] == 1:
+            out_index[i] = 0
+        else:
+            out_index[i] = big_index[bd]
 
 
 def shape_broadcast(shape1: UserShape, shape2: UserShape) -> UserShape:
@@ -102,7 +115,23 @@ def shape_broadcast(shape1: UserShape, shape2: UserShape) -> UserShape:
         IndexingError : if cannot broadcast
     """
     # TODO: Implement for Task 2.2.
-    raise NotImplementedError('Need to implement for Task 2.2')
+    # raise NotImplementedError('Need to implement for Task 2.2')
+    if len(shape1) < len(shape2):
+        shape1,shape2 = shape2,shape1
+    ret = []
+    for i in range(len(shape1)):
+        if i < len(shape2):
+            ret.append(shape1[i])
+        else:
+            sd = i - len(shape2)
+            if shape2[sd] == 1:
+                ret.append(shape1[i])
+            else:
+                if shape1[i] == 1:
+                    ret.append(shape2[sd])
+                else:
+                    raise IndexError()
+    return tuple(ret)
 
 
 def strides_from_shape(shape: UserShape) -> UserStrides:
@@ -228,7 +257,11 @@ class TensorData:
         ), f"Must give a position to each dimension. Shape: {self.shape} Order: {order}"
 
         # TODO: Implement for Task 2.1.
-        raise NotImplementedError('Need to implement for Task 2.1')
+        # raise NotImplementedError('Need to implement for Task 2.1')
+        shape = tuple([self.shape[i] for i in order])
+        strides = tuple([self.strides[i] for i in order])
+        return TensorData(self._storage,shape,strides)
+
 
     def to_string(self) -> str:
         s = ""
